@@ -2,13 +2,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import numpy as np
 import hashlib
-import matplotlib.pyplot as plt
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 
 from iot_telemetry import IoTTelemetry
 from random_pool import RandomPool
 
-n = 500
 
 def to_binary(value):
     """Convert a float32 value to its binary representation and remove the 'b' from '.'."""
@@ -66,6 +64,7 @@ def query_coordinates():
     oldest_entries = session.query(IoTTelemetry).order_by(IoTTelemetry.timestamp).limit(
         1000).all()
 
+    # in case if entities from the db shall be deleted
     # if oldest_entries:
     #     for entry in oldest_entries:
     #         session.delete(entry)
@@ -116,19 +115,24 @@ def submit():
         sample = pool.generate_sample_and_remove(min_value, max_value)
         samples.append(sample)
 
-    # print("Sample:", sample)
-    #
-    # iot_telemetry_output = open("coordinates.json", 'r+')
-    # for i in range(999):
-    #     sample_to_write = pool.generate_sample_and_remove()
-    #     iot_telemetry_output.write(json.dumps(sample_to_write))
-    #     iot_telemetry_output.write('\n')
-    #
-    # # name = request.form['name']
-    # return str(sample)
-
-    plt.hist(samples, bins=10, color='skyblue', edgecolor='black')
+    # plt.hist(samples, bins=10, color='skyblue', edgecolor='black')
     return render_template('result_page.html', items=samples)
+
+
+@app.route('/tbd-7/random', methods=['GET'])
+def get_numbers_api():
+    data = request.args
+    min_value = int(data.get('min'))
+    max_value = int(data.get('max'))
+    n_value = int(data.get('N'))
+
+    # Generate a sample and remove it from the pool
+    samples = []
+    for i in range(0, n_value):
+        sample = pool.generate_sample_and_remove(min_value, max_value)
+        samples.append(sample)
+
+    return jsonify(samples)
 
 
 if __name__ == '__main__':
