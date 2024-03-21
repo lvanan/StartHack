@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TBD-7 Perfect Random Generator</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+  }
+  .container {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 800px;
+  }
+  .logo {
+    background-image: url('logo.png'); /* Replace with the actual path to the logo image */
+    height: 100px; /* Adjusted size */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 0 auto 20px;
+  }
+  .input-group {
+    display: flex;
+    justify-content: start; /* Changed to start to align the first item with the container start */
+    margin: 20px auto;
+    width: 600px; /* Adjusted width for the group to 600px */
+  }
+  .input-field {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 12px; /* Right margin of 12px */
+    width: 180px; /* Adjusted width to account for margins */
+  }
+  .input-field:last-child {
+    margin-right: 0; /* Removing the right margin for the last input field */
+  }
+  .generate-btn {
+    width: 600px; /* Width to match the combined input fields and margins */
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  .generate-btn:hover {
+    background-color: #0056b3;
+  }
+  .output-space {
+    background-color: #f0f0f0;
+    border: 2px dashed #ccc;
+    width: 600px; /* Adjusted width */
+    height: 300px; /* Adjusted height */
+    margin: 20px auto;
+  }
+  .footer {
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 30px;
+  }
+</style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="logo"></div>
+    <h1>TBD-7 Perfect Random Generator</h1>
+
+    <form action="/submit" method="post">
+      <div class="input-group">
+        <input type="number" name="min" class="input-field" placeholder="min">
+        <input type="number" name="max" class="input-field" placeholder="max">
+        <input type="number" name="N" class="input-field" placeholder="N">
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+
+<!--    <div class="output-space"></div>-->
+    <div class="footer">StartHack 2024 | Cisco Cloud Case</div>
+  </div>
+</body>
+</html>
+
+

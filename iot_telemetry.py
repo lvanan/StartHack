@@ -12,10 +12,10 @@ class IoTTelemetry(Base):
     timestamp = Column(String)
 
     def __init__(self, json_data, timestamp):
-        self.latitude = json_data["iotTelemetry"]["detectedPosition"]["latitude"]
-        self.longitude = json_data["iotTelemetry"]["detectedPosition"]["longitude"]
-        self.x_pos = json_data["iotTelemetry"]["detectedPosition"]["xPos"]
-        self.y_pos = json_data["iotTelemetry"]["detectedPosition"]["yPos"]
+        self.latitude = float(json_data["iotTelemetry"]["detectedPosition"]["latitude"])
+        self.longitude = float(json_data["iotTelemetry"]["detectedPosition"]["longitude"])
+        self.x_pos = float(json_data["iotTelemetry"]["detectedPosition"]["xPos"])
+        self.y_pos = float(json_data["iotTelemetry"]["detectedPosition"]["yPos"])
         self.timestamp = timestamp
 
     def __json__(self): return {"latitude": self.latitude, "longitude": self.longitude, "x_pos": self.x_pos,

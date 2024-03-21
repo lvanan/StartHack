@@ -127,7 +127,6 @@ try:
 except:
     apiKey = get_API_Key_and_auth()
 
-
 # overwrite previous log file
 f = open("logs.json", 'r+')
 device_update_output = open("device_update_output.txt", 'r+')
@@ -172,25 +171,32 @@ for line in r.iter_lines():
         event_types.add(eventType)
         print(event_types)
 
-        if eventType == 'DEVICE_LOCATION_UPDATE':
-            try:
-                telemetry_dto = DeviceLocationUpdate(event)
-                # random_number, random_check = random_int_from_xy(telemetry_dto.latitude % 1,
-                #                                                  telemetry_dto.longitude % 1)
-                print(str(telemetry_dto.__dict__))
-                device_update_output.write(str(telemetry_dto.__dict__))
-                device_update_output.write('\n')
-
-            except Exception as e:
-                print(f"something is off: {e}")
+        # if eventType == 'DEVICE_LOCATION_UPDATE':
+        #     try:
+        #         telemetry_dto = DeviceLocationUpdate(event)
+        #         # random_number, random_check = random_int_from_xy(telemetry_dto.latitude % 1,
+        #         #                                                  telemetry_dto.longitude % 1)
+        #         print(str(telemetry_dto.__dict__))
+        #         device_update_output.write(str(telemetry_dto.__dict__))
+        #         device_update_output.write('\n')
+        #
+        #     except Exception as e:
+        #         print(f"something is off: {e}")
 
         if eventType == 'IOT_TELEMETRY':
             try:
                 iot_telemetry = IoTTelemetry(event, datetime.now().strftime('%Y%m%d%H%M%S'))
-                if not records_to_save.__contains__(iot_telemetry):
+
+                is_not_present = True
+                for r in records_to_save:
+                    if iot_telemetry.latitude.__eq__(r.latitude) and iot_telemetry.longitude.__eq__(
+                            r.longitude):
+                        is_not_present = False
+
+                if is_not_present:
                     records_to_save.add(iot_telemetry)
 
-                if len(records_to_save) > 100:
+                if len(records_to_save) > 500:
                     session.add_all(records_to_save)
                     session.commit()
                     json_data = [obj.__json__() for obj in records_to_save]

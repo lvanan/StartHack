@@ -30,7 +30,7 @@ class RandomPool:
         p_ones = ones / total_bits
         return abs(p_zeros - 0.5) < 0.05 and abs(p_ones - 0.5) < 0.05
 
-    def generate_sample_and_remove(self):
+    def generate_sample_and_remove(self, min_val = 0, max_val = 1):
         max_value = 2 ** 256 - 1
         """Generate a sample from the pool uniformly and remove the used hash."""
         if not self.pool:
@@ -40,4 +40,6 @@ class RandomPool:
         # Convert binary back to int for the sample, or perform another desired operation
         sample = int(selected_hash, 2)
         normalized_value = sample / max_value
-        return normalized_value
+
+        scaled_value = (normalized_value*(max_val - min_val)) + min_val
+        return scaled_value
