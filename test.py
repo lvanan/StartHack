@@ -3,10 +3,10 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 
 
-# Define a route to render the index.html template
+# Define a route to render the start_page.html template
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('start_page.html')
 
 
 # Define a route to handle form submissions

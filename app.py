@@ -1,14 +1,14 @@
 from flask import Flask, render_template
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import numpy as np
 import hashlib
-import json
+import matplotlib.pyplot as plt
 
-from device_location_update import DeviceLocationUpdate
 from iot_telemetry import IoTTelemetry
 from random_pool import RandomPool
 
+n = 5
 
 def to_binary(value):
     """Convert a float32 value to its binary representation and remove the 'b' from '.'."""
@@ -93,10 +93,10 @@ app = Flask(__name__)
 pool = init_pool()
 
 
-# Define a route to render the index.html template
+# Define a route to render the start_page.html template
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('start_page.html')
 
 
 # Define a route to handle form submissions
@@ -106,17 +106,24 @@ def submit():
     # print("Randomness assessment (True means uniform):", pool.assess_randomness())
 
     # Generate a sample and remove it from the pool
-    sample = pool.generate_sample_and_remove()
-    print("Sample:", sample)
+    samples = set()
+    for i in range(0, n):
+        sample = pool.generate_sample_and_remove()
+        samples.add(sample)
 
-    iot_telemetry_output = open("random.json", 'r+')
-    for i in range(999):
-        sample_to_write = pool.generate_sample_and_remove()
-        iot_telemetry_output.write(json.dumps(sample_to_write))
-        iot_telemetry_output.write('\n')
+    # print("Sample:", sample)
+    #
+    # iot_telemetry_output = open("random.json", 'r+')
+    # for i in range(999):
+    #     sample_to_write = pool.generate_sample_and_remove()
+    #     iot_telemetry_output.write(json.dumps(sample_to_write))
+    #     iot_telemetry_output.write('\n')
+    #
+    # # name = request.form['name']
+    # return str(sample)
 
-    # name = request.form['name']
-    return str(sample)
+    plt.hist(samples, bins=10, color='skyblue', edgecolor='black')
+    return render_template('generator_page.html', value=str(samples))
 
 
 if __name__ == '__main__':

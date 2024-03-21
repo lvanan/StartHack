@@ -145,7 +145,7 @@ r = s.get(
 
 # Jumps through every new event we have through firehose
 print("Starting Stream")
-event_types = set([])
+event_types = set()
 
 engine = create_engine('sqlite:///location.db')
 
@@ -155,7 +155,7 @@ Session = sessionmaker(bind=engine)
 
 session = Session()
 
-records_to_save = set([])
+records_to_save = set()
 
 for line in r.iter_lines():
     if line:
@@ -187,9 +187,10 @@ for line in r.iter_lines():
         if eventType == 'IOT_TELEMETRY':
             try:
                 iot_telemetry = IoTTelemetry(event, datetime.now().strftime('%Y%m%d%H%M%S'))
-                records_to_save.add(iot_telemetry)
+                if not records_to_save.__contains__(iot_telemetry):
+                    records_to_save.add(iot_telemetry)
 
-                if len(records_to_save) > 1000:
+                if len(records_to_save) > 100:
                     session.add_all(records_to_save)
                     session.commit()
                     json_data = [obj.__json__() for obj in records_to_save]
